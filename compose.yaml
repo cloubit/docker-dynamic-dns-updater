@@ -1,0 +1,9 @@
+services:
+  ydns-updater:
+    image: cloubit/ydns-updater
+    container_name: ydns_updater
+    env_file:
+        - ./ydns_update.env
+    restart: always
+    network_mode: host
+    
