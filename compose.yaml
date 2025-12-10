@@ -1,9 +1,15 @@
 services:
-  ydns-updater:
-    image: cloubit/ydns-updater
-    container_name: ydns_updater
+  ddns-updater:
+    image: cloubit\dynamic-dns-updater
+    container_name: ddns-updater
     env_file:
-        - ./ydns_update.env
+        - ./ddns_update.env
     restart: always
-    network_mode: host
+    networks:
+        - internal
+
+networks:
+  internal:
+    name: ddns-updater
+    driver: bridge
     
