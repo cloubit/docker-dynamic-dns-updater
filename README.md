@@ -75,4 +75,4 @@ No IP Adress has changed: `dns_updater  | Status update: 'your.domain.org', noch
 All other Messages ar failure. Check the Credentials.
 
 ## Docker Hub
-[Link to the dynamic-dns-updater Docker image](https://hub.docker.com/r/cloubit/dynamic-dns-updater)
+[Link to the dynamic-dns-updater Docker image](https://hub.docker.com/repository/docker/cloubit/ddns-updater/)
