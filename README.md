@@ -12,7 +12,7 @@ or download the last repository.
 
 If you have docker installed, you can create your own Docker Image about:
 ```sh
-docker build -t ddns-updater:v1 .
+docker build -t ddns-updater:v1.1 .
 ```
 
 ## Instruction for start-up
@@ -48,7 +48,7 @@ ENABLE_IPV4=True
 ```
 services:
   ddns-updater:
-    image: cloubit/dynamic-dns-updater
+    image: ddns-updater:v1.1
     container_name: ddns-updater
     env_file:
         - ./ddns_update.env
