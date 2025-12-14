@@ -1,10 +1,9 @@
 #!/bin/sh
 
-# Exit on unset variables (safe), treat empty as error later when needed
+# --- Exit on unset variables (safe), treat empty as error later when needed--
 set -u
 
 # --- Logging helpers --------------------------------------------------------
-
 log() {
     # Normal message
     printf '%s\n' "$*" >&2
@@ -17,7 +16,6 @@ fail() {
 }
 
 # --- Validate required environment variables --------------------------------
-
 [ -n "${DDNS_TOKEN:-}" ]  || fail "DDNS_TOKEN not set."
 [ -n "${UPDATE_DELAY:-}" ] || fail "UPDATE_DELAY not set."
 [ -n "${APIURL_BASE:-}" ]  || fail "APIURL_BASE not set. This is required for curl." # Fügen Sie diese Validierung hinzu, falls sie im vorherigen Schritt fehlte.
@@ -31,7 +29,6 @@ domains=$(env | sed -n 's/^DDOMAIN[0-9]*=//p')
 [ -n "${ENABLE_IPV4:-}" ] || [ -n "${ENABLE_IPV6:-}" ] || fail "No IP version enabled (ENABLE_IPV4 or ENABLE_IPV6 must be set)."
 
 # --- Function: update a single domain ---------------------------------------
-
 update_domain() {
     domain=${1:-}
     ip_version=${2:-}
@@ -69,7 +66,6 @@ update_domain() {
 }
 
 # --- Main update loop --------------------------------------------------------
-
 log "$(date -Is) Starting DDNS updater..."
 log "$(date -Is) Domains: ${domains}"
 log "$(date -Is) Update delay: ${UPDATE_DELAY}s"
@@ -78,7 +74,10 @@ log "$(date -Is) Update delay: ${UPDATE_DELAY}s"
 
 while true
 do
-    echo "${domains}" | while IFS= read -r domain
+    OIFS="$IFS"
+    IFS='
+    '
+    for domain in ${domains}
     do
         if [ -n "${ENABLE_IPV4:-}" ]; then
             update_domain "${domain}" 4
@@ -88,5 +87,6 @@ do
             update_domain "${domain}" 6
         fi
     done
+    IFS="$OIFS"
     sleep "${UPDATE_DELAY}"
 done
