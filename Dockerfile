@@ -48,7 +48,7 @@ ENV UPDATE_DELAY=${UPDATE_DELAY} \
     
 COPY --from=builder /lib/*musl* \
     /lib/
-COPY --from=builder /bin/sh /bin/ls /bin/date /bin/cat /bin/grep /bin/sleep /bin/sed \
+COPY --from=builder /bin/sh /bin/date /bin/sleep /bin/sed /bin/kill /bin/chmod \
     /bin/
 COPY --from=builder /etc/passwd /etc/shadow /etc/group \
     /etc/
@@ -60,10 +60,14 @@ COPY --from=builder /usr/bin/curl /usr/bin/cut /usr/bin/env \
     /usr/bin/
 COPY --from=builder /usr/lib/libcurl* /usr/lib/libz* /usr/lib/libcares* /usr/lib/libnghttp2* /usr/lib/libnghttp3* /usr/lib/libidn2* /usr/lib/libpsl* /usr/lib/libssl* /usr/lib/libcrypto* /usr/lib/libbrotli* /usr/lib/libunistring* \
     /usr/lib/
-COPY ./ddns_update.sh /opt/ddns_update.sh
+COPY --chmod=755 ./ddns_update.sh /opt/ddns_update.sh
 
 WORKDIR /opt
+RUN chmod +x ./ddns_update.sh
 
 USER ${USERNAME}
 
-CMD ["/bin/sh", "/opt/ddns_update.sh"]
+HEALTHCHECK --interval=20s --timeout=30s --start-period=10s --retries=3 \
+    CMD kill -0 1 || exit 1
+
+ENTRYPOINT ["./ddns_update.sh"]
