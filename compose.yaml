@@ -1,6 +1,6 @@
 services:
   ddns-updater:
-    image: cloubit\dynamic-dns-updater
+    image: cloubit/ddns-updater
     container_name: ddns-updater
     env_file:
         - ./ddns_update.env
@@ -12,4 +12,3 @@ networks:
   internal:
     name: ddns-updater
     driver: bridge
-    
